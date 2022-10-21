@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //GLOBAL VARIABLES
     const searchForm = document.querySelector("#github-form");
     const userList = document.querySelector("#user-list");
+    const repoList = document.querySelector('#repos-list')
 
     //ADD EVENT LISTENER
     searchForm.addEventListener("submit", (eventObj)=> {
@@ -33,7 +34,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
             userList.append(liUsername, userImage, p);
             
+            liUsername.addEventListener('click', ()=> {
+            // console.log('I was clicked')
+            reposSingleUserData(username)
         })
+        })
+
+    function reposSingleUserData(username){
+        fetch(`https://api.github.com/users/${username}/repos`)
+        .then(response => response.json())
+        .then(repoData =>{
+
+            repoData.forEach((repo) => {
+                // console.log(repo.name)
+                const liRepoName = document.createElement("li")
+                liRepoName.textContent = repo.name
+                repoList.append(liRepoName)
+            })
+         })
+        }
 
     })
 
