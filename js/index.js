@@ -11,6 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const userList = document.querySelector("#user-list");
     const repoList = document.querySelector('#repos-list')
 
+    // KL MOVED TO HAVE SECTION UPDATE
+    const liUsername = document.createElement("li");
+    const userImage = document.createElement("img");
+    const p = document.createElement("p");
+    userList.append(liUsername, userImage, p);
+
     //ADD EVENT LISTENER
     searchForm.addEventListener("submit", (eventObj)=> {
         eventObj.preventDefault();
@@ -23,38 +29,28 @@ document.addEventListener("DOMContentLoaded", () => {
         .then (response => response.json())
         .then (singleUserData => {
 
-            const liUsername = document.createElement("li");
             liUsername.textContent =  singleUserData.items[0].login;
-
-            const userImage = document.createElement("img");
             userImage.src = singleUserData.items[0].avatar_url;
-
-            const p = document.createElement("p");
             p.innerHTML = `<a href="${singleUserData.items[0].html_url}">GitHub Link </a>`;
-
-            userList.append(liUsername, userImage, p);
             
-            liUsername.addEventListener('click', ()=> {
-            // console.log('I was clicked')
             reposSingleUserData(username)
-        })
-        })
+        }) // second then ends
+    
 
-    function reposSingleUserData(username){
+    function reposSingleUserData (username) {
         fetch(`https://api.github.com/users/${username}/repos`)
         .then(response => response.json())
-        .then(repoData =>{
-
+        .then(repoData => 
             repoData.forEach((repo) => {
-                // console.log(repo.name)
-                const liRepoName = document.createElement("li")
-                liRepoName.textContent = repo.name
-                repoList.append(liRepoName)
-            })
-         })
-        }
+                const aRepoName = document.createElement("a")
+                aRepoName.textContent = repo.name
+                aRepoName.href = repo.url
+                repoList.append(aRepoName)
+        }) // for each ends
+        ) //second then ends
+    } //function ends
 
-    })
+    }) //form event listener ends
 
     //Using the results of the search, display information about the \
     //users to the page. (You might include showing their username, avatar 
@@ -65,22 +61,5 @@ document.addEventListener("DOMContentLoaded", () => {
     //     name.forEach(renderUsername);
     // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-})
+})  // dom content loaded ends
 
